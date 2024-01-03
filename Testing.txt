@@ -1,0 +1,97 @@
+To thoroughly test your Flask application, you can use `curl` commands or a tool like Postman. Below are examples of `curl` commands for testing each route and functionality in your application:
+
+### 1. User Registration
+**Curl Command:**
+```bash
+# Register a regular user
+curl -X POST http://127.0.0.1:5000/register -H "Content-Type: application/json" -d "{\"username\":\"regularuser\", \"password\":\"password\"}"
+
+# Register an admin user
+curl -X POST http://127.0.0.1:5000/register -H "Content-Type: application/json" -d "{\"username\":\"adminuser\", \"password\":\"password\", \"is_admin\":true}"
+```
+
+### 2. User login and store the session cookie:
+**Curl Command:**
+```bash
+# Login a regular user
+curl -c cookies.txt -X POST http://127.0.0.1:5000/login -H "Content-Type: application/json" -d "{\"username\":\"regularuser\", \"password\":\"password\"}"
+# Login an admin user
+curl -c cookies.txt -X POST http://127.0.0.1:5000/login -H "Content-Type: application/json" -d "{\"username\":\"adminuser\", \"password\":\"password\"}"
+```
+    #List all Users info
+    # For Admin user Only
+    # Assuming you have already logged in as an admin and have the session cookies stored in 'cookies.txt'
+    curl -b cookies.txt http://127.0.0.1:5000/users
+
+### 3. Creating a New Task
+**Curl Command:**
+```bash
+curl -b cookies.txt -X POST http://127.0.0.1:5000/tasks -H "Content-Type: application/json" -d "{\"task\":\"Fill Up the cars tanks\", \"due_date\":\"2024-05-01T09:00:00\", \"priority\":\"High\"}"
+```
+
+### 3. Mark Task as Completed (replace task_id and task_name appropriately):
+
+    curl -b cookies.txt -X POST http://127.0.0.1:5000/tasks/complete -H "Content-Type: application/json" -d "{\"id\":1}"
+    # or
+    curl -b cookies.txt -X POST http://127.0.0.1:5000/tasks/complete -H "Content-Type: application/json" -d "{\"task\":\"Buy milk\"}"
+
+### 4. List All Tasks:
+    curl -b cookies.txt http://127.0.0.1:5000/tasks
+
+### 5. List Completed Tasks:
+    curl -b cookies.txt http://127.0.0.1:5000/tasks/completed
+
+### 4. Retrieving All Tasks
+**Curl Command:**
+```bash
+curl -b cookies.txt http://127.0.0.1:5000/tasks
+```
+
+### 5. Searching for Tasks
+**Curl Command:**
+```bash
+curl -b cookies.txt "http://127.0.0.1:5000/tasks/search?keyword=milk"
+```
+
+### 6. Retrieving a Specific Task
+Assuming you want to get the task with ID 1.
+**Curl Command:**
+```bash
+curl -b cookies.txt http://127.0.0.1:5000/tasks/1
+```
+
+### 7. Updating a Task
+Assuming you want to update the task with ID 1.
+**Curl Command:**
+```bash
+curl -b cookies.txt -X PUT http://127.0.0.1:5000/tasks/1 -H "Content-Type: application/json" -d "{\"task\":\"Buy bread\", \"due_date\":\"2024-06-01T10:00:00\", \"priority\":\"Medium\"}"
+```
+
+### 8. Deleting a Task
+Assuming you want to delete the task with ID 1.
+**Curl Command:**
+```bash
+curl -b cookies.txt -X DELETE http://127.0.0.1:5000/tasks/1
+```
+
+### 9. User Logout
+**Curl Command:**
+```bash
+curl -b cookies.txt http://127.0.0.1:5000/logout
+```
+
+Mark Task as Completed (replace task_id and task_name appropriately):
+
+curl -b cookies.txt -X POST http://127.0.0.1:5000/tasks/complete -H "Content-Type: application/json" -d "{\"id\":1}"
+# or
+curl -b cookies.txt -X POST http://127.0.0.1:5000/tasks/complete -H "Content-Type: application/json" -d "{\"task\":\"Buy milk\"}"
+
+
+### Notes for Testing:
+
+- Make sure your Flask application is running before executing these commands.
+- You will need to handle authentication. The `curl` examples above do not include handling for cookies or tokens. When testing with Postman or similar tools, you can more easily manage sessions and cookies.
+- Replace `127.0.0.1:5000` with your Flask app's address and port if different.
+- The task IDs and tag IDs will depend on your database state. Make sure to use the correct IDs based on the tasks and tags you have created.
+
+These tests will help ensure that each part of your Flask application is functioning as expected.
